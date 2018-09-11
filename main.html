@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>LeitherApp</title>
+    <style>
+    div{
+        perspective: 1000px;
+        overflow:hidden;
+    }
+    h1{
+        font-family:'宋体';
+        font-size:50px;
+        text-align:center;
+        line-height:300px;
+        text-shadow:4px 3px 0px rgba(0,0,0,.3);
+        background: linear-gradient(to right, red,blue);
+        -webkit-background-clip: text;
+        color: transparent;
+        animation:myfirst 1s linear;
+        }
+    @keyframes myfirst
+      {
+      from {transform:rotateY(-180deg)translateX(600px)}
+      to {transform:rotateY(0deg)translateX(0)}
+      }
+    </style>
+</head>
+<body>
+    
+</body>
+                                            
+    <script name="l-api.browser">
+    //导入api文件
+    </script>
+    <script>
+       //初始化接口
+        window.G ={};
+        let api = QxzLApi.initLAPI('http://vzhan.cn/webapi/')
+        window.G.api=api;
+     //处理函数                                       
+    (async ()=>{
+        //调用登录接口,用户名为Hello,密码为world
+        let login=await G.api.login('Hell1o','world','byname')
+        //登录完成后返回值,拿到sid;
+        let sid=login.sid
+        //拿到userid
+        let userid=login.user.id
+        //定义用户信息
+        let userinfo={
+            userid:'666',
+            name:'HelloWorld',
+            age:'20',
+            sex:'男'
+        }
+        let field=userinfo.userid;
+         userinfo=JSON.stringify(userinfo)
+        //调用数据库-hash表建库接口,创建名为HELLO_INFO的数据库
+        let table=await G.api.hSet(sid, userid, 'HELLO_INFO', field, userinfo) 
+        //调用数据库-hash表建库查询信息接口,获取数据库中的信息
+        let helloInfo=JSON.parse(await G.api.hGet(sid, userid, 'HELLO_INFO',field))
+        let div=document.createElement("div");
+        div.innerHTML = "<h1>"+helloInfo.name+"</h1>";
+        document.body.appendChild(div);
+    })()
+  
+                                                
+        
+</script>
+</html>
